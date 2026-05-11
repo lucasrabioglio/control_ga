@@ -1,0 +1,146 @@
+# =========================================================
+# Quartus Prime
+# =========================================================
+
+# Bases de datos de compilación
+db/
+incremental_db/
+
+# Archivos de salida
+output_files/
+
+# Archivos temporales
+*.bak
+*.tmp
+*.temp
+*.smsg
+*.summary
+*.done
+*.qws
+*.qdf
+*.ddb
+*.cmp
+*.eda.rpt
+*.pin
+*.sof
+*.pof
+*.jam
+*.jbc
+*.ekp
+*.hex
+*.ttf
+*.rpt
+*.chg
+*.qmsg
+*.qpf.bak
+
+# Archivos de programación y configuración
+*.cdf
+
+# Archivos de timing y simulación
+*.sdo
+*.vho
+*.vo
+
+# Netlists y archivos generados
+*.map.*
+*.fit.*
+*.sta.*
+*.asm.*
+
+# Reportes
+*.flow.rpt
+*.fit.rpt
+*.map.rpt
+*.sta.rpt
+
+# Señales internas / debug
+*.signalTap
+*.stp
+
+# =========================================================
+# Questa / ModelSim
+# =========================================================
+
+# Librerías compiladas
+work/
+modelsim.ini
+transcript
+
+# Archivos temporales
+*.wlf
+*.vstf
+*.log
+*.dbg
+*.dat
+*.ini
+*.crash
+
+# Waveforms
+*.vcd
+*.fst
+*.ghw
+
+# Coverage
+covhtmlreport/
+coverage/
+
+# Simulación
+vsim.wlf
+
+# Directorios típicos
+simulation/
+sim/
+questa/
+
+# =========================================================
+# VHDL / Verilog temporales
+# =========================================================
+
+*.cf
+*.o
+*.obj
+
+# =========================================================
+# Python (si usás scripts auxiliares)
+# =========================================================
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales
+venv/
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# =========================================================
+# Linux / VSCode
+# =========================================================
+
+*~
+*.swp
+*.swo
+
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# =========================================================
+# Archivos que SÍ conviene mantener
+# =========================================================
+# NO ignores:
+# *.qsf
+# *.qpf
+# *.sdc
+# *.vhd
+# *.v
+# *.tcl
+# *.do
+# README.md
