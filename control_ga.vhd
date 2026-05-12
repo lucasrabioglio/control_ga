@@ -4,13 +4,14 @@ library ieee;
 
 entity control_ga is
 
-	generic ( Npob : natural := 40;  -- Cantidad de individuos por generacion
-				 Ngen : natural := 60); -- Cantidad de generaciones
+	generic ( Npob : natural := 6;  -- Cantidad de individuos por generacion --"Originalmente es de 40 individuos la poblacion"--
+				 Ngen : natural := 2; -- Cantidad de generaciones              --"Usamos 60 generaciones segun simulaciones en python"--
+				Nbins : natural := 5);
 	port(
 		clk		 : in	 std_logic;
 		prng_mut	 : in  std_logic;   -- Bit de entrada proveniente de un LFSR que indica si ese individuo muta o no (si prng_mut = '0' NO muta)
 		rst	    : in	 std_logic;
-		sel	    : out std_logic_vector(2 downto 0)
+		O_gi,O_eval,O_guardar,O_elit,O_cross,O_mut : out std_logic
 	);
 
 end entity;
@@ -22,6 +23,7 @@ architecture uno of control_ga is
 	
 	signal count  : integer range 0 to Npob;
 	signal count2 : integer range 0 to Npob*Ngen;
+	signal countNbins : integer range 0 to Nbins;
 
 begin
 
@@ -29,24 +31,34 @@ begin
 	begin
 		if rst = '0' then
 			count <= 0;
+			countNbins <= 0;
 			state <= GI;
 		elsif (rising_edge(clk)) then
 			case state is
-			
+			--------------------------------------
+			--------------------------------------
 				when GI=>
-					count <= count + 1;
-					state <= EVAL;
-					
+					if countNbins < Nbins then
+						state <= GI;
+						countNbins <= countNbins + 1;
+					else
+						count <= count + 1;
+						state <= EVAL;
+					end if;
+			--------------------------------------
+			--------------------------------------
 				when EVAL=>
 					state <= GUARDAR;
-					
+			--------------------------------------
+			--------------------------------------
 				when GUARDAR=>
 					if count = Npob then
 						state <= ELIT;
 					else
 						state <= GI;
 					end if;
-					
+			--------------------------------------
+			--------------------------------------
 				when ELIT =>
 					count2 <= count2 + 1;
 					if count2 = Npob*Ngen then
@@ -57,17 +69,20 @@ begin
 						count2 <= count2 + 1;
 						state <= CROSS;
 					end if;
-					
+			--------------------------------------
+			--------------------------------------
 				when CROSS =>
 					if prng_mut = '0' then
 						state <= EVAL;
 					else
 						state <= MUT;
 					end if;
-					
+			--------------------------------------
+			--------------------------------------
 				when MUT =>
 					state <= EVAL;
-					
+			--------------------------------------
+			--------------------------------------
 			end case;
 		end if;
 	end process;
@@ -76,17 +91,47 @@ begin
 	begin
 		case state is
 			when GI =>
-				sel <= "000";
+				O_gi      <= '1';
+				O_eval    <= '0';
+				O_guardar <= '0';
+				O_elit    <= '0';
+				O_cross   <= '0';
+				O_mut     <= '0';
 			when EVAL =>
-				sel <= "001";
+				O_gi      <= '0';
+				O_eval    <= '1';
+				O_guardar <= '0';
+				O_elit    <= '0';
+				O_cross   <= '0';
+				O_mut     <= '0';
 			when GUARDAR =>
-				sel <= "010";
+				O_gi      <= '0';
+				O_eval    <= '0';
+				O_guardar <= '1';
+				O_elit    <= '0';
+				O_cross   <= '0';
+				O_mut     <= '0';
 			when ELIT =>
-				sel <= "011";
+				O_gi      <= '0';
+				O_eval    <= '0';
+				O_guardar <= '0';
+				O_elit    <= '1';
+				O_cross   <= '0';
+				O_mut     <= '0';
 			when CROSS =>
-				sel <= "100";
+				O_gi      <= '0';
+				O_eval    <= '0';
+				O_guardar <= '0';
+				O_elit    <= '0';
+				O_cross   <= '1';
+				O_mut     <= '0';
 			when MUT =>
-				sel <= "101";
+				O_gi      <= '0';
+				O_eval    <= '0';
+				O_guardar <= '0';
+				O_elit    <= '0';
+				O_cross   <= '0';
+				O_mut     <= '1';
 		end case;
 	end process;
 

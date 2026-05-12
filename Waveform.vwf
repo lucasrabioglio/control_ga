@@ -23,6 +23,7 @@ quit -f
 
 
 
+
 </modelsim_script>
 <modelsim_script_timing>onerror {exit -code 1}
 vlib work
@@ -41,6 +42,7 @@ proc simTimestamp {} {
 after 2500 simTimestamp
 run -all
 quit -f
+
 
 
 
@@ -112,44 +114,64 @@ SIGNAL("rst")
 	PARENT = "";
 }
 
-SIGNAL("sel")
+SIGNAL("O_cross")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
-	SIGNAL_TYPE = BUS;
-	WIDTH = 3;
-	LSB_INDEX = 0;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
 	DIRECTION = OUTPUT;
 	PARENT = "";
 }
 
-SIGNAL("sel[2]")
+SIGNAL("O_elit")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
 	WIDTH = 1;
 	LSB_INDEX = -1;
 	DIRECTION = OUTPUT;
-	PARENT = "sel";
+	PARENT = "";
 }
 
-SIGNAL("sel[1]")
+SIGNAL("O_eval")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
 	WIDTH = 1;
 	LSB_INDEX = -1;
 	DIRECTION = OUTPUT;
-	PARENT = "sel";
+	PARENT = "";
 }
 
-SIGNAL("sel[0]")
+SIGNAL("O_gi")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
 	WIDTH = 1;
 	LSB_INDEX = -1;
 	DIRECTION = OUTPUT;
-	PARENT = "sel";
+	PARENT = "";
+}
+
+SIGNAL("O_guardar")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = OUTPUT;
+	PARENT = "";
+}
+
+SIGNAL("O_mut")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = OUTPUT;
+	PARENT = "";
 }
 
 TRANSITION_LIST("clk")
@@ -185,33 +207,57 @@ TRANSITION_LIST("rst")
 	}
 }
 
-TRANSITION_LIST("sel[2]")
+TRANSITION_LIST("O_cross")
 {
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL X FOR 999.0;
-		LEVEL 0 FOR 2001.0;
+		LEVEL X FOR 3000.0;
 	}
 }
 
-TRANSITION_LIST("sel[1]")
+TRANSITION_LIST("O_elit")
 {
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL X FOR 999.0;
-		LEVEL 0 FOR 2001.0;
+		LEVEL X FOR 3000.0;
 	}
 }
 
-TRANSITION_LIST("sel[0]")
+TRANSITION_LIST("O_eval")
 {
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL X FOR 999.0;
-		LEVEL 0 FOR 2001.0;
+		LEVEL X FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("O_gi")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL X FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("O_guardar")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL X FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("O_mut")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL X FOR 3000.0;
 	}
 }
 
@@ -244,42 +290,56 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "sel";
+	CHANNEL = "O_cross";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 3;
 	TREE_LEVEL = 0;
-	CHILDREN = 4, 5, 6;
 }
 
 DISPLAY_LINE
 {
-	CHANNEL = "sel[2]";
+	CHANNEL = "O_elit";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 4;
-	TREE_LEVEL = 1;
-	PARENT = 3;
+	TREE_LEVEL = 0;
 }
 
 DISPLAY_LINE
 {
-	CHANNEL = "sel[1]";
+	CHANNEL = "O_eval";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 5;
-	TREE_LEVEL = 1;
-	PARENT = 3;
+	TREE_LEVEL = 0;
 }
 
 DISPLAY_LINE
 {
-	CHANNEL = "sel[0]";
+	CHANNEL = "O_gi";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 6;
-	TREE_LEVEL = 1;
-	PARENT = 3;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "O_guardar";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 7;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "O_mut";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 8;
+	TREE_LEVEL = 0;
 }
 
 TIME_BAR
