@@ -4,134 +4,178 @@ library ieee;
 
 entity control_ga is
 
-	generic ( Npob : natural := 6;  -- Cantidad de individuos por generacion --"Originalmente es de 40 individuos la poblacion"--
-				 Ngen : natural := 2; -- Cantidad de generaciones              --"Usamos 60 generaciones segun simulaciones en python"--
-				Nbins : natural := 5);
+	generic ( Npob : natural := 40;  -- Cantidad de individuos por generacion --"Originalmente es de 40 individuos la poblacion"--
+				 Ngen : natural := 100; -- Cantidad de generaciones              --"Usamos 60 generaciones segun simulaciones en python"--
+				Nbins : natural := 512);
 	port(
-		clk		 : in	 std_logic;
-		prng_mut	 : in  std_logic;   -- Bit de entrada proveniente de un LFSR que indica si ese individuo muta o no (si prng_mut = '0' NO muta)
-		rst	    : in	 std_logic;
-		O_gi,O_eval,O_guardar,O_elit,O_cross,O_mut : out std_logic
+		clk,rst	: in	std_logic;
+		fin_hist : in  std_logic;
+		fin_eval : in  std_logic;
+		Hpob_i,sel,Helite,Hguar,Hcros,Hpmut,Hmejor : out std_logic
 	);
 
 end entity;
 
 architecture uno of control_ga is
 
-	type state_type is (GI, EVAL, GUARDAR, ELIT, CROSS, MUT);
+	type state_type is (INICIO,CONTEO,EVAL,ELITE,PADRE,CRUCE,MUT,FIN);
 	signal state  : state_type;
 	
-	signal count  : integer range 0 to Npob;
-	signal count2 : integer range 0 to Npob*Ngen;
-	signal countNbins : integer range 0 to Nbins;
-
+	---------- CONTADOR DE POBLACION INICIAL ----------
+	signal Cpob_i,Cpob : integer range 0 to (Npob - 1);
+	
+	---------- CONTADOR DE GENERACIONES ----------
+	signal Cgen : integer range 0 to (Ngen);
+	
 begin
 
 	process (clk, rst)
 	begin
 		if rst = '0' then
-			count <= 0;
-			countNbins <= 0;
-			state <= GI;
+			state <= INICIO;
 		elsif (rising_edge(clk)) then
 			case state is
 			--------------------------------------
 			--------------------------------------
-				when GI=>
-					if countNbins < Nbins then
-						state <= GI;
-						countNbins <= countNbins + 1;
+				when INICIO=>
+					if fin_hist = '0' then
+						state <= INICIO;
 					else
-						count <= count + 1;
-						state <= EVAL;
+						state <= CONTEO;
 					end if;
+					
+			--------------------------------------
+			--------------------------------------
+				when CONTEO=>
+					Cpob_i <= Cpob_i + 1;
+					state <= EVAL;
+					
 			--------------------------------------
 			--------------------------------------
 				when EVAL=>
-					state <= GUARDAR;
-			--------------------------------------
-			--------------------------------------
-				when GUARDAR=>
-					if count = Npob then
-						state <= ELIT;
-					else
-						state <= GI;
-					end if;
-			--------------------------------------
-			--------------------------------------
-				when ELIT =>
-					count2 <= count2 + 1;
-					if count2 = Npob*Ngen then
-						state  <= GI;
-						count  <= 0;
-						count2 <= 0;
-					else
-						count2 <= count2 + 1;
-						state <= CROSS;
-					end if;
-			--------------------------------------
-			--------------------------------------
-				when CROSS =>
-					if prng_mut = '0' then
+					if fin_eval = '0' then
 						state <= EVAL;
 					else
-						state <= MUT;
+						state <= ELITE;
+						Cpob <= Cpob + 1;
 					end if;
+					
 			--------------------------------------
 			--------------------------------------
-				when MUT =>
-					state <= EVAL;
+				when ELITE =>
+					if (Cpob_i = Npob - 1) then
+						if (Cpob = Npob - 1) then
+							state <= PADRE;
+						else
+							state <= CRUCE;
+						end if;
+					else
+						state <= INICIO;
+					end if;
+					
+			--------------------------------------
+			--------------------------------------
+				when PADRE =>
+					Cgen <= Cgen + 1;
+					Cpob <= 0;
+					state <= CRUCE;
+			--------------------------------------
+			--------------------------------------
+				when CRUCE =>
+					if (Cgen = Ngen) then
+						state <= FIN;
+					else
+						state <= EVAL;
+					end if;
+					state <= MUT;
+					
+			--------------------------------------
+			--------------------------------------
+				when MUT	=>
+					if (Cgen = Ngen) then
+						state <= FIN;
+					else
+						state <= EVAL;
+					end if;
+					
+			--------------------------------------
+			--------------------------------------
+				when FIN =>
+					Cpob_i <= 0;
+					Cgen   <= 0;
 			--------------------------------------
 			--------------------------------------
 			end case;
 		end if;
 	end process;
-
+	
 	process (state)
 	begin
 		case state is
-			when GI =>
-				O_gi      <= '1';
-				O_eval    <= '0';
-				O_guardar <= '0';
-				O_elit    <= '0';
-				O_cross   <= '0';
-				O_mut     <= '0';
+			when INICIO =>
+				Hpob_i <= '1';
+				sel    <= '0';
+				Helite <= '0';
+				Hguar  <= '0';
+				Hcros  <= '0';
+				Hpmut  <= '0';
+				Hmejor <= '0';
+			when CONTEO =>
+				Hpob_i <= '0';
+				sel    <= '0';
+				Helite <= '0';
+				Hguar  <= '0';
+				Hcros  <= '0';
+				Hpmut  <= '0';
+				Hmejor <= '0';
 			when EVAL =>
-				O_gi      <= '0';
-				O_eval    <= '1';
-				O_guardar <= '0';
-				O_elit    <= '0';
-				O_cross   <= '0';
-				O_mut     <= '0';
-			when GUARDAR =>
-				O_gi      <= '0';
-				O_eval    <= '0';
-				O_guardar <= '1';
-				O_elit    <= '0';
-				O_cross   <= '0';
-				O_mut     <= '0';
-			when ELIT =>
-				O_gi      <= '0';
-				O_eval    <= '0';
-				O_guardar <= '0';
-				O_elit    <= '1';
-				O_cross   <= '0';
-				O_mut     <= '0';
-			when CROSS =>
-				O_gi      <= '0';
-				O_eval    <= '0';
-				O_guardar <= '0';
-				O_elit    <= '0';
-				O_cross   <= '1';
-				O_mut     <= '0';
+				Hpob_i <= '0';
+				sel    <= '0';
+				Helite <= '0';
+				Hguar  <= '0';
+				Hcros  <= '0';
+				Hpmut  <= '0';
+				Hmejor <= '0';
+			when ELITE =>
+				Hpob_i <= '0';
+				sel    <= '0';
+				Helite <= '1';
+				Hguar  <= '0';
+				Hcros  <= '0';
+				Hpmut  <= '0';
+				Hmejor <= '0';
+			when PADRE =>
+				Hpob_i <= '0';
+				sel    <= '0';
+				Helite <= '0';
+				Hguar  <= '1';
+				Hcros  <= '0';
+				Hpmut  <= '0';
+				Hmejor <= '0';
+			when CRUCE =>
+				Hpob_i <= '0';
+				sel    <= '1';
+				Helite <= '0';
+				Hguar  <= '0';
+				Hcros  <= '1';
+				Hpmut  <= '0';
+				Hmejor <= '0';
 			when MUT =>
-				O_gi      <= '0';
-				O_eval    <= '0';
-				O_guardar <= '0';
-				O_elit    <= '0';
-				O_cross   <= '0';
-				O_mut     <= '1';
+				Hpob_i <= '0';
+				sel    <= '0';
+				Helite <= '0';
+				Hguar  <= '0';
+				Hcros  <= '0';
+				Hpmut  <= '1';
+				Hmejor <= '0';
+			when FIN =>
+				Hpob_i <= '0';
+				sel    <= '0';
+				Helite <= '0';
+				Hguar  <= '0';
+				Hcros  <= '0';
+				Hpmut  <= '0';
+				Hmejor <= '1';
 		end case;
 	end process;
 

@@ -24,12 +24,16 @@ quit -f
 
 
 
+
+
+
+
 </modelsim_script>
 <modelsim_script_timing>onerror {exit -code 1}
 vlib work
 vcom -work work control_ga.vho
 vcom -work work Waveform.vwf.vht
-vsim -novopt -c -t 1ps -sdfmax control_ga_vhd_vec_tst/i1=control_ga_vhd.sdo -L cycloneive -L altera -L altera_mf -L 220model -L sgate -L altera_lnsim work.control_ga_vhd_vec_tst
+vsim  -c -t 1ps -sdfmax control_ga_vhd_vec_tst/i1=control_ga_vhd.sdo -L cycloneive -L altera -L altera_mf -L 220model -L sgate -L altera_lnsim work.control_ga_vhd_vec_tst
 vcd file -direction control_ga.msim.vcd
 vcd add -internal control_ga_vhd_vec_tst/*
 vcd add -internal control_ga_vhd_vec_tst/i1/*
@@ -42,6 +46,10 @@ proc simTimestamp {} {
 after 2500 simTimestamp
 run -all
 quit -f
+
+
+
+
 
 
 
@@ -94,16 +102,6 @@ SIGNAL("clk")
 	PARENT = "";
 }
 
-SIGNAL("prng_mut")
-{
-	VALUE_TYPE = NINE_LEVEL_BIT;
-	SIGNAL_TYPE = SINGLE_BIT;
-	WIDTH = 1;
-	LSB_INDEX = -1;
-	DIRECTION = INPUT;
-	PARENT = "";
-}
-
 SIGNAL("rst")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
@@ -114,7 +112,27 @@ SIGNAL("rst")
 	PARENT = "";
 }
 
-SIGNAL("O_cross")
+SIGNAL("fin_eval")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = INPUT;
+	PARENT = "";
+}
+
+SIGNAL("fin_hist")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = INPUT;
+	PARENT = "";
+}
+
+SIGNAL("Hcros")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
@@ -124,7 +142,7 @@ SIGNAL("O_cross")
 	PARENT = "";
 }
 
-SIGNAL("O_elit")
+SIGNAL("Helite")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
@@ -134,7 +152,7 @@ SIGNAL("O_elit")
 	PARENT = "";
 }
 
-SIGNAL("O_eval")
+SIGNAL("Hguar")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
@@ -144,7 +162,7 @@ SIGNAL("O_eval")
 	PARENT = "";
 }
 
-SIGNAL("O_gi")
+SIGNAL("Hmejor")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
@@ -154,7 +172,7 @@ SIGNAL("O_gi")
 	PARENT = "";
 }
 
-SIGNAL("O_guardar")
+SIGNAL("Hpmut")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
@@ -164,13 +182,213 @@ SIGNAL("O_guardar")
 	PARENT = "";
 }
 
-SIGNAL("O_mut")
+SIGNAL("Hpob_i")
 {
 	VALUE_TYPE = NINE_LEVEL_BIT;
 	SIGNAL_TYPE = SINGLE_BIT;
 	WIDTH = 1;
 	LSB_INDEX = -1;
 	DIRECTION = OUTPUT;
+	PARENT = "";
+}
+
+SIGNAL("sel")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = OUTPUT;
+	PARENT = "";
+}
+
+SIGNAL("Cgen")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = BUS;
+	WIDTH = 2;
+	LSB_INDEX = 0;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("Cgen[1]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "Cgen";
+}
+
+SIGNAL("Cgen[0]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "Cgen";
+}
+
+SIGNAL("Cpob")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = BUS;
+	WIDTH = 3;
+	LSB_INDEX = 0;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("Cpob[2]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "Cpob";
+}
+
+SIGNAL("Cpob[1]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "Cpob";
+}
+
+SIGNAL("Cpob[0]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "Cpob";
+}
+
+SIGNAL("Cpob_i")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = BUS;
+	WIDTH = 3;
+	LSB_INDEX = 0;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("Cpob_i[2]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "Cpob_i";
+}
+
+SIGNAL("Cpob_i[1]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "Cpob_i";
+}
+
+SIGNAL("Cpob_i[0]")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "Cpob_i";
+}
+
+SIGNAL("state.CONTEO")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("state.CRUCE")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("state.ELITE")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("state.EVAL")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("state.FIN")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("state.INICIO")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("state.MUT")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
+	PARENT = "";
+}
+
+SIGNAL("state.PADRE")
+{
+	VALUE_TYPE = NINE_LEVEL_BIT;
+	SIGNAL_TYPE = SINGLE_BIT;
+	WIDTH = 1;
+	LSB_INDEX = -1;
+	DIRECTION = REGISTERED;
 	PARENT = "";
 }
 
@@ -188,26 +406,98 @@ TRANSITION_LIST("clk")
 	}
 }
 
-TRANSITION_LIST("prng_mut")
-{
-	NODE
-	{
-		REPEAT = 1;
-		LEVEL 1 FOR 3000.0;
-	}
-}
-
 TRANSITION_LIST("rst")
 {
 	NODE
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 40.0;
-		LEVEL 1 FOR 2960.0;
+		LEVEL 1 FOR 1860.0;
+		LEVEL 0 FOR 20.0;
+		LEVEL 1 FOR 1080.0;
 	}
 }
 
-TRANSITION_LIST("O_cross")
+TRANSITION_LIST("fin_eval")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL 0 FOR 380.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 160.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 140.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 100.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 80.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 100.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 80.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 100.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 80.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 60.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 40.0;
+		LEVEL 1 FOR 20.0;
+		LEVEL 0 FOR 100.0;
+	}
+}
+
+TRANSITION_LIST("fin_hist")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL 0 FOR 160.0;
+		LEVEL 1 FOR 2840.0;
+	}
+}
+
+TRANSITION_LIST("Hcros")
 {
 	NODE
 	{
@@ -216,7 +506,7 @@ TRANSITION_LIST("O_cross")
 	}
 }
 
-TRANSITION_LIST("O_elit")
+TRANSITION_LIST("Helite")
 {
 	NODE
 	{
@@ -225,7 +515,7 @@ TRANSITION_LIST("O_elit")
 	}
 }
 
-TRANSITION_LIST("O_eval")
+TRANSITION_LIST("Hguar")
 {
 	NODE
 	{
@@ -234,7 +524,7 @@ TRANSITION_LIST("O_eval")
 	}
 }
 
-TRANSITION_LIST("O_gi")
+TRANSITION_LIST("Hmejor")
 {
 	NODE
 	{
@@ -243,7 +533,7 @@ TRANSITION_LIST("O_gi")
 	}
 }
 
-TRANSITION_LIST("O_guardar")
+TRANSITION_LIST("Hpmut")
 {
 	NODE
 	{
@@ -252,18 +542,171 @@ TRANSITION_LIST("O_guardar")
 	}
 }
 
-TRANSITION_LIST("O_mut")
+TRANSITION_LIST("Hpob_i")
 {
 	NODE
 	{
 		REPEAT = 1;
 		LEVEL X FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("sel")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL X FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("Cgen[1]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("Cgen[0]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("Cpob[2]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("Cpob[1]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("Cpob[0]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("Cpob_i[2]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("Cpob_i[1]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("Cpob_i[0]")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("state.CONTEO")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("state.CRUCE")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("state.ELITE")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("state.EVAL")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("state.FIN")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("state.INICIO")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("state.MUT")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
+	}
+}
+
+TRANSITION_LIST("state.PADRE")
+{
+	NODE
+	{
+		REPEAT = 1;
+		LEVEL U FOR 3000.0;
 	}
 }
 
 DISPLAY_LINE
 {
-	CHANNEL = "rst";
+	CHANNEL = "clk";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 0;
@@ -272,7 +715,7 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "clk";
+	CHANNEL = "rst";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 1;
@@ -281,7 +724,7 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "prng_mut";
+	CHANNEL = "fin_hist";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 2;
@@ -290,7 +733,7 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "O_cross";
+	CHANNEL = "fin_eval";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 3;
@@ -299,7 +742,7 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "O_elit";
+	CHANNEL = "state.INICIO";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 4;
@@ -308,7 +751,7 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "O_eval";
+	CHANNEL = "state.CONTEO";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 5;
@@ -317,7 +760,7 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "O_gi";
+	CHANNEL = "state.EVAL";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 6;
@@ -326,7 +769,7 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "O_guardar";
+	CHANNEL = "state.ELITE";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 7;
@@ -335,11 +778,211 @@ DISPLAY_LINE
 
 DISPLAY_LINE
 {
-	CHANNEL = "O_mut";
+	CHANNEL = "state.PADRE";
 	EXPAND_STATUS = COLLAPSED;
 	RADIX = Binary;
 	TREE_INDEX = 8;
 	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "state.CRUCE";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 9;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "state.MUT";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 10;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "state.FIN";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 11;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Hpob_i";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 12;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "sel";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 13;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Helite";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 14;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Hcros";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 15;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Hguar";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 16;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Hmejor";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 17;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Hpmut";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Binary;
+	TREE_INDEX = 18;
+	TREE_LEVEL = 0;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cgen";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 19;
+	TREE_LEVEL = 0;
+	CHILDREN = 20, 21;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cgen[1]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 20;
+	TREE_LEVEL = 1;
+	PARENT = 19;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cgen[0]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 21;
+	TREE_LEVEL = 1;
+	PARENT = 19;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cpob";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 22;
+	TREE_LEVEL = 0;
+	CHILDREN = 23, 24, 25;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cpob[2]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 23;
+	TREE_LEVEL = 1;
+	PARENT = 22;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cpob[1]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 24;
+	TREE_LEVEL = 1;
+	PARENT = 22;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cpob[0]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 25;
+	TREE_LEVEL = 1;
+	PARENT = 22;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cpob_i";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 26;
+	TREE_LEVEL = 0;
+	CHILDREN = 27, 28, 29;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cpob_i[2]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 27;
+	TREE_LEVEL = 1;
+	PARENT = 26;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cpob_i[1]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 28;
+	TREE_LEVEL = 1;
+	PARENT = 26;
+}
+
+DISPLAY_LINE
+{
+	CHANNEL = "Cpob_i[0]";
+	EXPAND_STATUS = COLLAPSED;
+	RADIX = Unsigned;
+	TREE_INDEX = 29;
+	TREE_LEVEL = 1;
+	PARENT = 26;
 }
 
 TIME_BAR
